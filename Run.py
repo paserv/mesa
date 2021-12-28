@@ -1,4 +1,4 @@
-from QueueModel import QueueModel
+from model import QueueModel
 import matplotlib.pyplot as plt
 
 # Config

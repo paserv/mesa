@@ -1,17 +1,18 @@
 from mesa import Agent
 import numpy as np
 from scipy.stats import poisson, beta, expon
+from agents.AgentIcon import agent_icon
 
 class Customer(Agent):
 
     def __init__(self, unique_id, model, max_width, max_height):
         super().__init__(unique_id, model)
-        self.customer_behind = 0
+        self.icon = agent_icon.customer
         self.max_width = max_width
         self.max_height = max_height
         self.coords = None
         # Time required to process the customer's transaction
-        self.service_time = expon.rvs(scale = 60 * 5)
+        self.service_time = expon.rvs(scale = 2)
         # Time of arrival at queue
         self.entry_time = np.int(beta(3, 3).rvs() * model.ticks) + 1
         self.balk_tolerance = 350000#poisson(35).rvs() + 1
@@ -29,7 +30,6 @@ class Customer(Agent):
             self._q_entry = self.model._current_tick
             if self.balk_tolerance > len(self.model.queue):
                 self.model.queue.append(self)
-                self.customer_behind = len(self.model.queue)
                 self.coords = (self.random.randrange(0, self.max_width), self.random.randrange(0, self.max_height) + 3)
                 self.model.grid.place_agent(self, self.coords)
             else:
